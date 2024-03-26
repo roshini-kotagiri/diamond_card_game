@@ -1,0 +1,134 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\title{Diamonds Bidding Game and GenAI}
+
+\author{K. Roshini}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% \begin{abstract}
+% Your abstract.
+% \end{abstract}
+
+\section{Introduction}
+
+This report assesses ChatGPT's comprehension abilities by instructing it on the rules of an obscure card game, tasking it with understanding and coding its implementation. GenAI was expected to grasp the rules and translate them into functional code for the game's execution. Evaluating GenAI's understanding and coding proficiency in implementing the unfamiliar card game rules constitutes the core of this assessment.
+
+\section{Problem Statement}
+I explained the game rules to GenAI as follows :
+
+
+In the card game, players can participate in either a two-player or three-player version. The
+two-player game is a modified variant of the three-player game, where either spades, hearts,
+or clubs are entirely removed from the deck. In the three-player game, each player receives
+a suit of cards other than diamonds. The diamond cards are shuffled and placed face down
+to form a draw pile. During each turn, the top diamond card is drawn and kept face down,
+representing the bidding price.
+All players must bid with one of their own cards in a closed bidding system, where bids are
+concealed from others until revealed. The winning bidder obtains the points of the diamond
+card, which are then added to their score. In the event of multiple players bidding with the
+same card, the points from the diamond are divided equally among them. The player with
+most points wins the game in the end. The points for each diamond card is equivalent to the
+rank 1<2<3<4<5<6<7<8<9<10<J<Q<K<A
+
+\section{Teaching GenAI the game}
+
+
+Initially, ChatGPT demonstrated a solid understanding of the game by paraphrasing the provided rules effectively, reflecting comprehension of the game mechanics.
+
+
+However, when asked to play the game against itself, ChatGPT made critical errors, such as incorrectly declaring the winner based on flawed logic, indicating a lack of proper rule comprehension.
+
+
+Upon correction of these mistakes, including clarifications regarding card values and scoring, ChatGPT showed improvement in following the game rules accurately.
+
+
+Despite grasping the game mechanics better after corrections, ChatGPT's strategic decision-making remained questionable, suggesting room for further refinement in its game play capabilities.
+
+\section{Strategy}
+ChatGPT gave many strategies , and i showed the corrections in its game it improved the strategy more and more better . It slowly started thinking from humans perspective.
+
+\section{Code Generated}
+\begin{lstlisting}
+import random
+
+CARD_VALUES = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 
+
+9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
+
+def create_deck():
+    deck = [value + suit for suit in ['C', 'H', 'S'] for value in CARD_VALUES]
+    return deck
+
+def shuffled_deck(deck):
+    random.shuffle(deck)
+
+def determine_winner(player_bids, card):
+    winning_bid = max(player_bids, key=lambda x: CARD_VALUES.get(x[0]))
+    max_bids = [bid for bid in player_bids if bid[0] == winning_bid[0]]
+    winning_score = CARD_VALUES[card[0]] / len(max_bids)
+    return {player: winning_score for bid, player in max_bids}
+
+def play_game():
+    deck = create_deck()
+    shuffled_deck(deck)
+    player1_score = 0
+    player2_score = 0
+    
+    while deck:
+        card = deck.pop()
+        print("Diamond card on auction:", card)
+        player_bids = {}
+        
+        for player in ['Player 1', 'Player 2']:
+            bid = input(f"{player}, choose a card to bid (2-9, 10, J, Q, K, 
+            
+            A): ").upper()
+            while bid not in CARD_VALUES:
+                print("Invalid bid. Please choose a valid card.")
+                bid = input(f"{player}, choose a card to bid (2-9, 10, J, Q, 
+                
+                K, A): ").upper()
+            player_bids[bid] = player
+        
+        winning_bids = determine_winner(player_bids, card)
+        
+        for bid, player in winning_bids.items():
+            if player == 'Player 1':
+                player1_score += bid
+            else:
+                player2_score += bid
+                
+        print("Player 1 score:", player1_score)
+        print("Player 2 score:", player2_score)
+        
+    if player1_score > player2_score:
+        print("Player 1 wins the game!")
+    elif player1_score < player2_score:
+        print("Player 2 wins the game!")
+    else:
+        print("It's a tie!")
+
+def main():
+    play_game()
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+\section{Conclusion}
+Teaching Gen AI to play a card game highlighted the contrasting strengths between humans and artificial intelligence. Humans rely on intuition and creativity, excel in problem-solving and social interaction, such as reading opponents' cues and bluffing. In contrast, Gen AI leverages algorithms and computational power for strategic planning and probability analysis, making optimal decisions based on data.
+
+In simpler terms, humans are great at thinking creatively and understanding social cues in games. Gen AI, on the other hand, is excellent at crunching numbers and making logical decisions based on data. However, teaching Gen AI to understand text and draw conclusions from it can be challenging and requires multiple attempts to get it right.
+\end{document}
